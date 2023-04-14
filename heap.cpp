@@ -73,13 +73,16 @@ void insertNum(int *&heap, int number) {
       if (heap[i] == 0) {//if the spot in the int pointer has no input aka is zero then...
 	heap[i] = number;//...put the number in that spot
 	index = i;//then make the index start from that spot so we don't have to begin from the start
-	return;//exit the loop because you're done inserting the number into the heap 
+	break;//exit the loop because you're done inserting the number into the heap 
       }
     }
   }
   int parentInx = parentHeap(heap, index);//finding the parent index
-  while (parentInx!=0&&heap[index]>heap[parentInx]) {//while the parentIndex exists and the number is greater than the parent index then swap it and rerun the program till everything is arranged.
-    printHeap(heap, 1, 0);
+  while (parentInx!=0 && heap[index]>heap[parentInx]) {//while the parentIndex exists and the number is greater than the parent index then swap it and rerun the program till everything is arranged.
+    int temp = heap[index];
+    heap[index]= heap[parentInx];
+    heap[parentInx] = temp;
+    index = parentInx;
     parentInx = parentHeap(heap, index);
    }
 }
@@ -112,12 +115,8 @@ void UserInput(int *&heap) {
   int numInput = 0;
   cout << "Enter a number: "<<endl;
   cin >> numInput;
+  cin.get();
   insertNum(heap, numInput);
-  for(int i = 0; i<sizeof(heap);i++){
-    if(heap[i] == numInput){
-      parentHeap(heap, i);
-    }
-  }
 }
 
 void printHeap(int *&heap, int index, int layer){
@@ -139,7 +138,7 @@ void printHeap(int *&heap, int index, int layer){
 int leftChild(int *&heap, int index){
   int leftIndex;
   leftIndex = index *2;
-  if(index<101&&index!=0){
+  if(index!=0&&index<101){
     return leftIndex;
   }else{
     return 0;
@@ -149,7 +148,7 @@ int leftChild(int *&heap, int index){
 int rightChild(int *&heap, int index){
   int rightIndex;
   rightIndex = (index * 2) + 1;
-  if(index<101&&index !=0){
+  if(index !=0&&index<101){
     return rightIndex;
   }else{
     return 0;
@@ -162,15 +161,10 @@ int parentHeap(int *&heap, int index){
   int num = floor(index/2);
    if (index == 1) {
     return 0;
-   }else{
-  while(index != 1 && heap[num]< heap[index]){
-    switching = heap[(int)floor(num)];
-    heap[(int)floor(num)] = heap[index];
-     heap[index] = switching;
-     index = index/2;
-    }
-  return switching;
-  }
+   }
+   else{
+     return floor(index/2);
+   }
 }
 
 
@@ -180,7 +174,6 @@ void remove(int *&heap){
   int right = 0;
   int temp = 0;
   int switching = 0;
-
   while(!(left!=0 && heap[rootIndex]>heap[left]&&right!=0&&heap[rootIndex]>heap[right])){
     left = leftChild(heap, rootIndex);
     right = rightChild(heap, rootIndex);
@@ -208,8 +201,12 @@ void remove(int *&heap){
     heap[rootIndex] = heap[switching];
     heap[switching] = temp;
     rootIndex = switching;
+    cout<<endl;
+    cout<<endl;
+  printHeap(heap, 1, 0);  
   }
-  heap[switching] = 0;add
+  heap[switching] = 0;
+  
 }
 
 
